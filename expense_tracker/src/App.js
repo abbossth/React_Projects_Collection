@@ -113,16 +113,18 @@ const History = () => {
           No Transaction
         </div>
       ) : (
-        transactions.map((item) => {
-          return (
-            <HistoryItem
-              text={item.text}
-              amount={item.amount}
-              key={item.id}
-              id={item.id}
-            />
-          );
-        })
+        <div className="transaction-list">
+          {transactions.map((item) => {
+            return (
+              <HistoryItem
+                text={item.text}
+                amount={item.amount}
+                key={item.id}
+                id={item.id}
+              />
+            );
+          })}
+        </div>
       )}
     </div>
   );
@@ -131,7 +133,7 @@ const History = () => {
 const HistoryItem = ({ id, amount, text }) => {
   const { deleteTransaction } = useContext(GlobalContext);
   return (
-    <div className="row mt-2 border">
+    <div className="transaction row mt-2 border">
       <div
         className="py-2 d-flex justify-content-between"
         style={{
