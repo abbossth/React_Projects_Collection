@@ -3,6 +3,10 @@ import { useState, useContext } from "react";
 import { GlobalProvider } from "./context/GlobalState";
 import { GlobalContext } from "./context/GlobalState";
 
+const amountDisplay = (amount) => {
+  return amount < 0 ? `-$${-amount}` : `$${amount}`;
+};
+
 const App = () => {
   return (
     <GlobalProvider>
@@ -46,7 +50,7 @@ const Balance = () => {
   return (
     <div className="text-start mt-4 px-2">
       <p className="text-uppercase m-0"> Your Balance </p>
-      <h2 className="text-uppercase"> ${total} </h2>
+      <h2 className="text-uppercase"> {amountDisplay(total)} </h2>
     </div>
   );
 };
@@ -67,10 +71,10 @@ const Statistics = () => {
   return (
     <div className="row text-center fw-bold">
       <div className="col-6">
-        <Income amount={incomeTotal} />
+        <Income amount={amountDisplay(incomeTotal)} />
       </div>
       <div className="col-6">
-        <Expense amount={expenseTotal} />
+        <Expense amount={amountDisplay(expenseTotal)} />
       </div>
     </div>
   );
@@ -81,7 +85,7 @@ const Income = ({ amount }) => {
     <div className="card">
       <div className="card-body">
         <p className={`text-uppercase m-0`}>Income</p>
-        <h3 className={"text-uppercase m-0 text-success"}>${amount}</h3>
+        <h3 className={"text-uppercase m-0 text-success"}>{amount}</h3>
       </div>
     </div>
   );
@@ -92,7 +96,7 @@ const Expense = ({ amount }) => {
     <div className="card">
       <div className="card-body">
         <p className={`text-uppercase m-0`}>Expense</p>
-        <h3 className={"text-uppercase m-0 text-danger"}>${amount}</h3>
+        <h3 className={"text-uppercase m-0 text-danger"}>{amount}</h3>
       </div>
     </div>
   );
@@ -104,16 +108,28 @@ const History = () => {
   return (
     <div>
       <h1> History </h1>
-      {transactions.map((item) => {
-        return (
-          <HistoryItem text={item.text} amount={item.amount} key={item.id} />
-        );
-      })}
+      {transactions.length === 0 ? (
+        <div className="alert alert-light" role="alert">
+          No Transaction
+        </div>
+      ) : (
+        transactions.map((item) => {
+          return (
+            <HistoryItem
+              text={item.text}
+              amount={item.amount}
+              key={item.id}
+              id={item.id}
+            />
+          );
+        })
+      )}
     </div>
   );
 };
 
-const HistoryItem = ({ amount, text }) => {
+const HistoryItem = ({ id, amount, text }) => {
+  const { deleteTransaction } = useContext(GlobalContext);
   return (
     <div className="row mt-2 border">
       <div
@@ -123,6 +139,7 @@ const HistoryItem = ({ amount, text }) => {
           backgroundColor: "#fff",
         }}
         title="Double Click to Delete the Transaction"
+        onDoubleClick={() => deleteTransaction(id)}
       >
         <p className="m-0">{text}</p>
         <p className="m-0">{amount < 0 ? `-$${-amount}` : `$${amount}`}</p>
@@ -132,13 +149,27 @@ const HistoryItem = ({ amount, text }) => {
 };
 
 const AddNewTransaction = () => {
+  // eslint-disable-next-line
   const [text, setText] = useState("");
+  // eslint-disable-next-line
   const [amount, setAmount] = useState(0);
 
+  const { addTransaction } = useContext(GlobalContext);
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    const newTransaction = {
+      id: Math.floor(Math.random() * 1000000000),
+      text,
+      amount: +amount,
+    };
+    addTransaction(newTransaction);
+  };
   return (
     <div>
       <h2>Add New Transaction</h2>
-      <form>
+      <form onSubmit={handleSubmit}>
         <div className="form-group mt-3">
           <label className="label">Text</label>
           <input
@@ -146,6 +177,7 @@ const AddNewTransaction = () => {
             id="text"
             className="form-control"
             placeholder="Enter text..."
+            value={text}
             onChange={(e) => setText(e.target.value)}
           />
         </div>
@@ -153,10 +185,11 @@ const AddNewTransaction = () => {
           <label className="label">Amount</label>
           <p>(negative-expense, positive-income)</p>
           <input
-            type="text"
+            type="number"
             id="text"
             className="form-control"
             placeholder="Enter amount..."
+            value={amount}
             onChange={(e) => setAmount(e.target.value)}
           />
         </div>
