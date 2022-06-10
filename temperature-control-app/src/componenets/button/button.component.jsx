@@ -1,8 +1,11 @@
 
-const Button = () => {
+const Button = ({ type, add, substract }) => {
     return (
-        <button className="btn" onClick={() => console.log("Clicked")}>
-            +
+        <button 
+            className="btn"
+            onClick={(type === "+" ? add : substract)}
+            >
+            {type}
         </button>
     )
 }

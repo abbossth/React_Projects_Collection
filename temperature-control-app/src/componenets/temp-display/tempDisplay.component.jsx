@@ -1,8 +1,8 @@
 
-const tempDisplay = () => {
+const tempDisplay = ({ degree }) => {
     return (
         <div className="circleDisplay">
-            <span>37°C</span>
+            <span>{degree}°C</span>
         </div>
     )
 }

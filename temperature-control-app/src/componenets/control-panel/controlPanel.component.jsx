@@ -1,19 +1,29 @@
+import { useState } from "react"
 import TempDisplay from "../temp-display/tempDisplay.component"
 import Button from "../button/button.component"
-const controlPanel = () => {
+
+
+const ControlPanel = () => {
+    const [temp, setTemp] = useState(0);
+    const add = () => {
+        setTemp(temp + 1)
+    }
+    const substract = () => {
+        setTemp(temp - 1)
+    }
     return (
         <div className="controlPanel">
-            <TempDisplay />
+            <TempDisplay degree={temp} />
             <div className="row">
                 <div className="col-6">
-                    <Button />
+                    <Button add={add} type={"+"} />
                 </div>
                 <div className="col-6">
-                    <Button />
+                    <Button substract={substract} type={"-"}/>
                 </div>
             </div>
         </div>
     )
 }
 
-export default controlPanel
+export default ControlPanel
