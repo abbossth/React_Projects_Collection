@@ -1,7 +1,10 @@
 
-const tempDisplay = ({ degree }) => {
+const tempDisplay = ({ bgColor, degree }) => {
+    const styles = {
+        backgroundColor: bgColor
+    }
     return (
-        <div className="circleDisplay">
+        <div style={styles} className="circleDisplay">
             <span>{degree}°C</span>
         </div>
     )
