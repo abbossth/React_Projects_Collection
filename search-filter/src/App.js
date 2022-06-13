@@ -5,6 +5,16 @@ import ItemsList from "./components/items-list/itemsList";
 
 const App = () => {
   const [items, setItems] = useState([]);
+  const [searchString, setSearchString] = useState('')
+
+  const filteredItems = items.filter((item) => {
+    return item.name.toLowerCase().includes(searchString.toLowerCase())
+  })
+
+  const onStringChange = (string) => {
+    setSearchString(string)
+  }
+
   useEffect(() => {
     fetch("https://jsonplaceholder.typicode.com/users")
       .then((res) => res.json())
@@ -13,8 +23,8 @@ const App = () => {
 
   return (
     <div className="App">
-      <SearchBox />
-      <ItemsList items={items} />
+      <SearchBox onStringChange={onStringChange} />
+      <ItemsList items={filteredItems} />
     </div>
   );
 };

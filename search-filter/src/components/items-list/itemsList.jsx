@@ -1,9 +1,11 @@
-const itemsList = () => {
-    return (
-        <div className="d-block">
+const itemsList = ({ items }) => {
+  return (
+    <div className="d-block">
+      {items.map((item) => {
+        return <p key={item.id}>{item.name}</p>;
+      })}
+    </div>
+  );
+};
 
-        </div>
-    )
-}
-
-export default itemsList
+export default itemsList;
