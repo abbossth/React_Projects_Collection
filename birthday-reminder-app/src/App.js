@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState, useEffect } from "react";
+import List from "./List";
+import "./App.css";
 
-function App() {
+const App = () => {
+  const [people, setPeople] = useState([]);
+  useEffect(() => {
+    fetch("https://jsonplaceholder.typicode.com/users")
+      .then((res) => res.json())
+      .then((data) => setPeople(data));
+  }, []);
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      <main>
+        <section className="container">
+          <h3 className="title">{people.length} birthday today</h3>
+          <List people={people} />
+          <button className="btn" onClick={() => setPeople([])}>
+            Clear All
+          </button>
+        </section>
+      </main>
     </div>
   );
-}
+};
 
 export default App;
